@@ -13,6 +13,8 @@
     implementation 'com.abcpen:open_camera:0.0.9'
     //识别库
     implementation 'com.abcpen:recognition:0.0.9'
+    
+
 
 ```
 
