@@ -10,6 +10,8 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 
 
+
+
 public class TakePhotoGuider extends Activity implements OnClickListener {
 
 

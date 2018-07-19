@@ -28,7 +28,6 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.ViewGroup.LayoutParams;
 import android.view.animation.AnimationUtils;
-import android.widget.ImageView;
 
 import com.abcpen.simple.Rotatable;
 
@@ -128,7 +127,7 @@ public class RotateImageView extends TwoStateImageView implements Rotatable {
         int saveCount = canvas.getSaveCount();
 
         // Scale down the image first if required.
-        if ((getScaleType() == ImageView.ScaleType.FIT_CENTER) &&
+        if ((getScaleType() == ScaleType.FIT_CENTER) &&
                 ((width < w) || (height < h))) {
             float ratio = Math.min((float) width / w, (float) height / h);
             canvas.scale(ratio, ratio, width / 2.0f, height / 2.0f);

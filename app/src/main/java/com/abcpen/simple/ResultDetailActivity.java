@@ -48,42 +48,10 @@ public class ResultDetailActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.ac_result_detail);
         bindIntent();
-        initView();
-    }
-
-    private void initView() {
-        mImageView = findViewById(R.id.riv_result);
-        pager = findViewById(R.id.view_pager);
-        MyPageAdapter adapter = new MyPageAdapter(getSupportFragmentManager());
-        pager.setAdapter(adapter);
-
-        Glide.with(this)
-                .load(mImageUrl)
-                .placeholder(R.color.G2)//图片加载出来前，显示的图片
-                .error(R.color.G2)//图片加载失败后，显示的图片
-                .into(mImageView);
-
     }
 
 
-    class MyPageAdapter extends FragmentPagerAdapter {
-
-        public MyPageAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            return ResultFragmentDetail.getInstance(mContent.get(position).question_body, mContent.get(position).quesiton_answer);
-        }
-
-        @Override
-        public int getCount() {
-            return mContent != null ? mContent.size() : 0;
-        }
-    }
 
 
 }

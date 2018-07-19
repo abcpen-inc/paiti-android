@@ -50,14 +50,17 @@
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="landscape"
             />
+
+        <activity
+            android:name="com.abcpen.simple.ResultActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:screenOrientation="portrait"
+            />
         <activity
             android:name="com.abcpen.simple.TakePhotoGuider"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="landscape"
             />
         <activity android:name="com.abcpen.simple.ResultDetailActivity"/>
-
-        <activity android:name="com.abcpen.simple.ResultActivity"/>
-
     </application>
 </manifest>

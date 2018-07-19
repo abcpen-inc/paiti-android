@@ -5,16 +5,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.abcpen.answer.ABCPaiTiManager;
 import com.abcpen.callback.ABCCallBack;
 import com.abcpen.callback.ABCFileCallBack;
 import com.abcpen.callback.ABCPaiTiAnswerListener;
-import com.abcpen.camera.sdk.util.ACLog;
+import com.abcpen.answer.ABCPaiTiManager;
 import com.abcpen.model.PASingleModel;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements ABCFileCallBack<S
             public void onSuccess(Object o) {
                 Toast.makeText(MainActivity.this, "认证成功", Toast.LENGTH_SHORT).show();
                 btnOpenCamera.setVisibility(View.VISIBLE);
-                ACLog.d("authToSDK success");
+                Log.d("zc","authToSDK success");
             }
 
             @Override

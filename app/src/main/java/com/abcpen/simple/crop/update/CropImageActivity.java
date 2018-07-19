@@ -17,6 +17,7 @@ import android.view.Display;
 import android.view.View;
 import android.widget.Toast;
 
+
 import com.abcpen.simple.R;
 import com.abcpen.simple.view.RotateImageView;
 import com.liveaa.education.LiveAaNative;

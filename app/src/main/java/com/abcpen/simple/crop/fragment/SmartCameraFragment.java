@@ -19,13 +19,14 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
-import com.abcpen.camera.sdk.CameraView;
-import com.abcpen.camera.sdk.call.CameraCropListen;
-import com.abcpen.camera.sdk.call.CameraTakePhotoLister;
-import com.abcpen.camera.sdk.call.OnPreviewStatusChangeListen;
+
 import com.abcpen.simple.R;
 import com.abcpen.simple.SmartCameraCropActivity;
 import com.abcpen.simple.TakePhotoGuider;
+import com.abcpen.camera.sdk.call.CameraCropListen;
+import com.abcpen.camera.sdk.call.CameraTakePhotoLister;
+import com.abcpen.camera.sdk.CameraView;
+import com.abcpen.camera.sdk.call.OnPreviewStatusChangeListen;
 import com.abcpen.simple.util.Util;
 import com.abcpen.simple.view.RotateImageView;
 
@@ -36,7 +37,8 @@ import java.io.File;
  * 拍照功能页面
  * Created by zhaocheng on 15/9/29.
  */
-public class SmartCameraFragment extends Fragment implements View.OnClickListener, CameraTakePhotoLister, OnPreviewStatusChangeListen {
+public class SmartCameraFragment extends Fragment {
+/*
 
     //view
     private CameraView mCameraView;
@@ -70,13 +72,13 @@ public class SmartCameraFragment extends Fragment implements View.OnClickListene
     }
 
     private void init(View view) {
-        mCameraView = (CameraView) view.findViewById(R.id.camera);
+        mCameraView = view.findViewById(R.id.camera);
         mCameraView.initCamera(getActivity(), null, this);
         mCameraView.setCameraResultListener(this);
 
 
         mTakeImageView = (RotateImageView) view.findViewById(R.id.iv_take_photo_democf);
-        mTakeImageView.setEnabled(false);
+        //mTakeImageView.setEnabled(false);
 
         mFlashView = (RotateImageView) view.findViewById(R.id.flash_toggle_iv);
         mTiShiIv = (ImageView) view.findViewById(R.id.tishiiv);
@@ -205,9 +207,11 @@ public class SmartCameraFragment extends Fragment implements View.OnClickListene
         orientationEventListener.disable();
     }
 
-    /**
+    */
+/**
      * 相册
-     */
+     *//*
+
     private void openAlbum() {
         Intent openAlbumIntent = new Intent(Intent.ACTION_PICK,
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -218,23 +222,29 @@ public class SmartCameraFragment extends Fragment implements View.OnClickListene
 
     }
 
-    /**
+    */
+/**
      * 帮助
-     */
+     *//*
+
     private void openHelp() {
         startActivity(TakePhotoGuider.getIntent(getActivity()));
     }
 
-    /**
+    */
+/**
      * 取消拍照
-     */
+     *//*
+
     private void cancelTakePhoto() {
         getActivity().finish();
     }
 
-    /**
+    */
+/**
      * 切换闪光灯
-     */
+     *//*
+
     private void changeFlash() {
         triggerFlashMode = ++triggerFlashMode % 3;
         int drawable = R.drawable.ic_flash_auto;
@@ -251,9 +261,11 @@ public class SmartCameraFragment extends Fragment implements View.OnClickListene
         mFlashView.setImageResource(drawable);
     }
 
-    /**
+    */
+/**
      * 拍照
-     */
+     *//*
+
     private void takePhoto() {
         if (progressDialog == null) {
             progressDialog = new ProgressDialog(getActivity());
@@ -314,11 +326,13 @@ public class SmartCameraFragment extends Fragment implements View.OnClickListene
         }
     }
 
-    /**
+    */
+/**
      * 子工程中 不能使用switch(v.getId()) 因 报错问题 转换为 if else...
      *
      * @param v
-     */
+     *//*
+
     @Override
     public void onClick(View v) {
         if (Util.isFastClick()) return;
@@ -381,6 +395,7 @@ public class SmartCameraFragment extends Fragment implements View.OnClickListene
         else
             mTakeImageView.setEnabled(false);
     }
+*/
 
 
 }

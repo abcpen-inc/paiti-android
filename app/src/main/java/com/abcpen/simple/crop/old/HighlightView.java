@@ -191,7 +191,6 @@ public class HighlightView {
                         bottom + 14f, mCornorPaint);
                 canvas.drawRect(right - 25f, bottom + 7f, right + 14f,
                         bottom + 14f, mCornorPaint);
-
             }
 
             // if (!mCircle) {

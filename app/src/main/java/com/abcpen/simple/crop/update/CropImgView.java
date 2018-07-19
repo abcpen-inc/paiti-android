@@ -35,6 +35,7 @@ import javax.microedition.khronos.egl.EGLContext;
 import javax.microedition.khronos.egl.EGLDisplay;
 
 
+
 public class CropImgView extends View implements OnTouchListener {
 
 	private final static String TAG = CropImgView.class.getName();

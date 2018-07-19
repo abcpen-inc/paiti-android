@@ -11,9 +11,9 @@ import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.view.WindowManager;
 
-import com.abcpen.camera.sdk.call.CameraCropListen;
 import com.abcpen.simple.crop.fragment.CropListener;
 import com.abcpen.simple.crop.fragment.SmartCropFragment;
+import com.abcpen.camera.sdk.call.CameraCropListen;
 
 
 /**

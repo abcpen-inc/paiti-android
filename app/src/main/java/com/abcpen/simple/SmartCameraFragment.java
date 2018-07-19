@@ -2,9 +2,9 @@ package com.abcpen.simple;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
@@ -15,25 +15,26 @@ import android.view.OrientationEventListener;
 import android.view.Surface;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.Toast;
 
+import com.abcpen.camera.sdk.AspectRatio;
 import com.abcpen.camera.sdk.CameraView;
 import com.abcpen.camera.sdk.call.CameraCropListen;
-import com.abcpen.camera.sdk.call.CameraTakePhotoLister;
-import com.abcpen.camera.sdk.call.OnPreviewStatusChangeListen;
 import com.abcpen.simple.util.Util;
 import com.abcpen.simple.view.RotateImageView;
 
-import java.io.File;
+import java.util.Set;
 
 
 /**
  * 拍照功能页面
  * Created by zhaocheng on 15/9/29.
  */
-public class SmartCameraFragment extends Fragment implements View.OnClickListener, CameraTakePhotoLister, OnPreviewStatusChangeListen {
+public class SmartCameraFragment extends Fragment implements View.OnClickListener {
 
     //view
     private CameraView mCameraView;
@@ -68,12 +69,43 @@ public class SmartCameraFragment extends Fragment implements View.OnClickListene
 
     private void init(View view) {
         mCameraView = (CameraView) view.findViewById(R.id.camera);
-        mCameraView.initCamera(getActivity(), null, this);
-        mCameraView.setCameraResultListener(this);
+        mCameraView.addCallback(new CameraView.Callback() {
+            @Override
+            public void onCameraOpened(CameraView cameraView) {
+                super.onCameraOpened(cameraView);
+                WindowManager windowManager = getActivity().getWindowManager();
+                Point point = new Point();
+                windowManager.getDefaultDisplay().getRealSize(point);
 
+                mCameraView.setPictureSize(point.y, point.x);
+            }
 
+            @Override
+            public void onCameraClosed(CameraView cameraView) {
+                super.onCameraClosed(cameraView);
+            }
+
+            @Override
+            public void onPictureTakeSuccess(CameraView cameraView, Uri uri) {
+                if (progressDialog != null && progressDialog.isShowing()) {
+                    progressDialog.dismiss();
+                }
+                if (uri == null) return;
+                mCameraView.stop();
+                if (cameraCropListen != null) cameraCropListen.takePhotoSuccess(uri);
+            }
+
+            @Override
+            public void onPictureTakeFail(CameraView cameraView) {
+                if (progressDialog != null && progressDialog.isShowing()) {
+                    progressDialog.dismiss();
+                }
+                Toast.makeText(getActivity(), "拍取图片失败", Toast.LENGTH_SHORT).show();
+                //getActivity().finish();
+            }
+        });
         mTakeImageView = (RotateImageView) view.findViewById(R.id.iv_take_photo_democf);
-        mTakeImageView.setEnabled(false);
+        //mTakeImageView.setEnabled(false);
 
         mFlashView = (RotateImageView) view.findViewById(R.id.flash_toggle_iv);
         mTiShiIv = (ImageView) view.findViewById(R.id.tishiiv);
@@ -93,7 +125,7 @@ public class SmartCameraFragment extends Fragment implements View.OnClickListene
 
         changUIForFromType();
 
-        initSaveUri();
+        //initSaveUri();
 
         orientationEventListener = new OrientationEventListener(getActivity()) {
             @Override
@@ -155,11 +187,11 @@ public class SmartCameraFragment extends Fragment implements View.OnClickListene
         mAlbumImageView.setOrientation(-ui_rotation, true);
         mTakeCancel.setOrientation(-ui_rotation, true);
         mGuiderImageView.setOrientation(-ui_rotation, true);
-        mCameraView.setUIRotation(ui_rotation);
+        //mCameraView.setUIRotation(ui_rotation);
     }
 
 
-    private void initSaveUri() {
+   /* private void initSaveUri() {
         if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
             cacheDir = Environment.getExternalStorageDirectory().getAbsolutePath()
                     + "/Android/data/" + getActivity().getPackageName() + "/paiti/image/";
@@ -172,14 +204,22 @@ public class SmartCameraFragment extends Fragment implements View.OnClickListene
         cacheDir += System.currentTimeMillis();
         saveUri = Uri.parse("file://" + cacheDir);
         mCameraView.setSavePhotoUri(saveUri);
-    }
+    }*/
 
     @Override
     public void onResume() {
         super.onResume();
         Log.d("zc", "cameraFragment onResume");
-        mCameraView.onResume();
-        orientationEventListener.enable();
+        mCameraView.start();
+        Set<AspectRatio> supportedAspectRatios = mCameraView.getSupportedAspectRatios();
+        Log.i("pq", "supportedAspectRatios" + supportedAspectRatios.size());
+        for (AspectRatio i : supportedAspectRatios) {
+            Log.i("pq", i.toString());
+        }
+        //AspectRatio aspectRatio =AspectRatio.of(1080,1920);
+        AspectRatio[] aspectRatios = supportedAspectRatios.toArray(new AspectRatio[supportedAspectRatios.size()]);
+        /*mCameraView.setAspectRatio(aspectRatios[3]);
+        orientationEventListener.enable();*/
     }
 
 
@@ -187,9 +227,9 @@ public class SmartCameraFragment extends Fragment implements View.OnClickListene
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
         if (hidden) {
-            mCameraView.onPause();
+            mCameraView.stop();
         } else {
-            mCameraView.onResume();
+            mCameraView.start();
         }
     }
 
@@ -197,7 +237,7 @@ public class SmartCameraFragment extends Fragment implements View.OnClickListene
     public void onPause() {
         super.onPause();
         Log.d("zc", "cameraFragment onPause");
-        mCameraView.onPause();
+        mCameraView.stop();
         orientationEventListener.disable();
     }
 
@@ -236,13 +276,13 @@ public class SmartCameraFragment extends Fragment implements View.OnClickListene
         int drawable = R.drawable.ic_flash_auto;
         if (triggerFlashMode == 0) {
             drawable = R.drawable.ic_flash_off;
-            mCameraView.setFlash(0);
+            mCameraView.setFlash(CameraView.FLASH_OFF);
         } else if (triggerFlashMode == 1) {
             drawable = R.drawable.ic_flash_on;
-            mCameraView.setFlash(1);
+            mCameraView.setFlash(CameraView.FLASH_ON);
         } else if (triggerFlashMode == 2) {
             drawable = R.drawable.ic_flash_auto;
-            mCameraView.setFlash(2);
+            mCameraView.setFlash(CameraView.FLASH_AUTO);
         }
         mFlashView.setImageResource(drawable);
     }
@@ -257,7 +297,7 @@ public class SmartCameraFragment extends Fragment implements View.OnClickListene
         progressDialog.setMessage("图片处理中...");
         progressDialog.show();
 
-        mCameraView.takePhoto();
+        mCameraView.takePicture();
     }
 
 
@@ -342,13 +382,13 @@ public class SmartCameraFragment extends Fragment implements View.OnClickListene
     }
 
 
-    @Override
+   /* @Override
     public void onTakePhotoCompile(Uri uri) {
         if (progressDialog != null && progressDialog.isShowing()) {
             progressDialog.dismiss();
         }
         if (uri == null) return;
-        mCameraView.onPause();
+        mCameraView.stop();
         if (cameraCropListen != null) cameraCropListen.takePhotoSuccess(uri);
     }
 
@@ -358,9 +398,9 @@ public class SmartCameraFragment extends Fragment implements View.OnClickListene
             progressDialog.dismiss();
         }
         getActivity().finish();
-    }
+    }*/
 
-    @Override
+    /*@Override
     public void onSurfaceCreated() {
 
 
@@ -376,7 +416,7 @@ public class SmartCameraFragment extends Fragment implements View.OnClickListene
             mTakeImageView.setEnabled(true);
         else
             mTakeImageView.setEnabled(false);
-    }
+    }*/
 
 
 }

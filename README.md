@@ -1,6 +1,6 @@
-# 拍题SDK V0.0.9
+# 拍题SDK V0.2.9
 
-## Mavent库集成
+## Maven库集成
 
 ```gradle
 
@@ -10,9 +10,9 @@
         
     }
     //相机库
-    implementation 'com.abcpen:open_camera:0.0.9'
+    implementation 'com.abcpen:open_camera:0.2.9'
     //识别库
-    implementation 'com.abcpen:recognition:0.0.9'
+    implementation 'com.abcpen:recognition:0.2.9'
     
 
 
@@ -256,12 +256,11 @@ public class AnswerModel implements Parcelable {
 
 ```
 
+## ResultActivity结果页的HTML渲染
 
 
-### 样式补充说明：HTML的方式展示。
 
 步骤： 1，页面HTML，拷贝 main/assets 文件夹下www目录到app的对应目录中
-
 
 2，拷贝demo 中的jsplugin目录下所有java文件（MyPlugin，Answer，ClassModel）和 res 的config.xml目录到app的对应文件夹。
 
@@ -284,19 +283,12 @@ public class AnswerModel implements Parcelable {
        		 }
        		 return genQuestionObj(2);
  	   }
+ 	   
+5, update h5 css ，统一引用all.css（iOS/Android）
 
 
 --------------------------------------------------------------------------------------
 
-####UpdateLog v0.0.9
 
-1,更新aar 到v0.0.9 
-
-    //相机库
-    implementation 'com.abcpen:open_camera:0.0.9'
-    //识别库
-    implementation 'com.abcpen:recognition:0.0.9'
-
-2,update h5 css ，统一引用all.css .
 
 

@@ -528,7 +528,6 @@ public class Util {
 	// return true;
 	// }
 
-
 	public static JSONArray objToJson(final ArrayList<Answer> answers) {
 		JSONArray jsonArray = null;
 		jsonArray = new JSONArray();
@@ -656,6 +655,7 @@ public class Util {
 		initToModel();
 		return idToClassName.get(id);
 	}
+
 
 
 
