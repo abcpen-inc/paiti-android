@@ -187,7 +187,7 @@ public class SmartCameraFragment extends Fragment implements View.OnClickListene
         mAlbumImageView.setOrientation(-ui_rotation, true);
         mTakeCancel.setOrientation(-ui_rotation, true);
         mGuiderImageView.setOrientation(-ui_rotation, true);
-        //mCameraView.setUIRotation(ui_rotation);
+//        mCameraView.setUIRotation(ui_rotation);
     }
 
 
@@ -209,7 +209,7 @@ public class SmartCameraFragment extends Fragment implements View.OnClickListene
     @Override
     public void onResume() {
         super.onResume();
-        Log.d("zc", "cameraFragment onResume");
+//        Log.d("zc", "cameraFragment onResume");
         mCameraView.start();
         Set<AspectRatio> supportedAspectRatios = mCameraView.getSupportedAspectRatios();
         Log.i("pq", "supportedAspectRatios" + supportedAspectRatios.size());
@@ -217,9 +217,9 @@ public class SmartCameraFragment extends Fragment implements View.OnClickListene
             Log.i("pq", i.toString());
         }
         //AspectRatio aspectRatio =AspectRatio.of(1080,1920);
-        AspectRatio[] aspectRatios = supportedAspectRatios.toArray(new AspectRatio[supportedAspectRatios.size()]);
-        /*mCameraView.setAspectRatio(aspectRatios[3]);
-        orientationEventListener.enable();*/
+        //AspectRatio[] aspectRatios = supportedAspectRatios.toArray(new AspectRatio[supportedAspectRatios.size()]);
+//        mCameraView.setAspectRatio(aspectRatios[3]);
+        orientationEventListener.enable();
     }
 
 
