@@ -1,49 +1,81 @@
-# 拍题SDK V0.2.9
+# 拍题SDK V1.0.1
 
 ## Maven库集成
 
 ```gradle
 
    repositories {
-        maven { url "http://nexus.abcpen.com/repository/release/" }
+        maven { url "http://nexus.abcpen.com/repository/android/" }
         ...
-        
     }
-    //相机库
-    implementation 'com.abcpen:open_camera:0.2.9'
-    //识别库
-    implementation 'com.abcpen:recognition:0.2.9'
-    
+    implementation 'com.abcpen:open_camera:1.0.1'
+    implementation 'com.abcpen:recognition:1.0.1'
 
+    implementation('com.abcpen:open_camera2:1.0.0', {
+        exclude group: 'com.android.support', module: '*'
+    })
 
 ```
+## 填写APPID
+参考App.java 文件 头部位置
 
 ## 初始化SDK
 
-> appkey appSecret 请联系笔声申请
-
 ```
-        ABCPaiTiManager.getInstance().init(this, appkey, appSecret);
-
-```
-
-## 资格认证(Auth)
-
-```
- public void authToSDK(View view) {
-        ABCPaiTiManager.getInstance().authToSDK(new ABCCallBack() {
+ 
+ **强烈建议在服务端实现此处获取token的代码
+ //用户自行初始化，并且提供获取app token的方法，参考下面refreshToken 的实现，
+ 
+ ABCPaiTiManager.getInstance().init(this, new ABCRefreshTokenCallback() {
             @Override
-            public void onSuccess(Object o) {
-                //认证成功
+            public void refreshToken(final ABCRefreshTokenResultCallback callback) {
+
+                //发送http请求
+
+                Request<String> objectRequest = new StringRequest(AUTH_URL, RequestMethod.POST);
+                final long timeStamp = System.currentTimeMillis();
+                final String sign = MD5Util.MD5Encode(app_id + timeStamp + appSecret, "utf8");
+
+                objectRequest.add("appId", app_id);
+                objectRequest.add("timestamp", timeStamp);
+                objectRequest.add("sign", sign);
+                objectRequest.add("expiration", 600); //这里时间可以设置的长一些
+                AsyncRequestExecutor.INSTANCE.execute(0, objectRequest, new OnResponseListener<String>() {
+                    @Override
+                    public void onStart(int what) {
+
+                    }
+
+                    @Override
+                    public void onSucceed(int what, Response<String> response) {
+                        Gson gson = new Gson();
+                        GetTokenModel model = gson.fromJson(response.get(), GetTokenModel.class);
+                        if (model.success && model.data != null) {
+                            if (callback != null)
+                                callback.onRefreshComplete(model.data.accessToken);
+                        } else {
+                            if (callback != null) {
+                                callback.onRefreshFailed();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailed(int what, Response<String> response) {
+
+                    }
+
+                    @Override
+                    public void onFinish(int what) {
+
+                    }
+                });
             }
 
-            @Override
-            public void onFail(Exception e) {
-              
-            }
         });
-    }
 ```
+
+
 
 
 ## 相机(CameraView)
@@ -149,15 +181,6 @@ void onResume()
 
 
 
-## 图片上传 答案识别(ABCPaiTiManager)
-```
-//路径
-uploadFile(String path, ABCFileCallBack<String> callBack)
-
-//图片
-uploadFile(String path, ABCFileCallBack<String> callBack)
-
-```
 >- CallBack介绍
 
 ```java
@@ -177,14 +200,12 @@ uploadFile(String path, ABCFileCallBack<String> callBack)
      * 上传进度
      * @param progress
      */
-    void onUploadProgress(int progress);
-````
+    void onUploadProgress(float progress);
+​````
 **上传成功后会返回图片id 后面答案识别成功后会对应此图片ID**
 
 ## 答案识别
->- 图片上传完成后等待服务端识别结果
-
-``` java
+​``` java
 // 注册图片识别 监听
 registerOnReceiveListener(ABCPaiTiAnswerListener listener)
 
@@ -192,6 +213,47 @@ registerOnReceiveListener(ABCPaiTiAnswerListener listener)
 unRegisterOnReceiveListener(ABCPaiTiAnswerListener listener)   
 
 ```
+## 拍图识别 (ABCPaiTiManager)
+
+
+
+```
+    
+    //本地图片处理
+    ABCPaiTiManager.getInstance().getImageQuestionByLocalPath(filePath,outputFolder,this);
+
+    //网络图片处理
+    ABCPaiTiManager.getInstance().
+    getImageQuestionByRemoteUrl("http://cos.abcpen.com/155324242632055726916.png");
+
+	
+	@Override
+    public void onAnswerData(final String localPath, final String imageUrl, PaitiResultModel.AnswerModelWrapper model) {
+    
+    	//v0.8.7 本地文件路径 路径地址输入为，参考onActivityResult 的图片拍摄完成部分传入的地址
+       if (model == null) {
+            updateUploadProgress(sb.append("\n识别失败 imageUrl: " + imageUrl + " localPath: " + path).toString());
+        } else {
+            ResultActivity.startResultActivity(
+                    MainActivity.this, imageUrl, "",
+                    model.result);
+            updateUploadProgress(sb.append("\n识别成功 : " + imageUrl + " localPath: " + path).toString());
+        }
+    }
+    
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK && requestCode == PHOTO_CODE) {
+            String filePath = data.getStringExtra(SmartCameraCropActivity.PHOTO_URI);
+            Log.e("onActivityResult", filePath);
+            
+            //同onAnswerData的地址，用来做tag
+            ABCPaiTiManager.getInstance().getImageQuestionByLocalPath(filePath, getPath());
+        }
+    }
+```
+
 **注册监听后 要记得销毁监听 不然会引起内存泄漏**
 
 >- 监听说明
@@ -203,14 +265,7 @@ unRegisterOnReceiveListener(ABCPaiTiAnswerListener listener)
      * @param imgId
      * @param paSingleModel
      */
-    void onAnswerData(String imgId, PASingleModel paSingleModel);
-
-
-    /**
-     * 没有找到对应答案
-     * @param imgId
-     */
-    void noGetAnswerData(String imgId);
+    void onAnswerData(final String imageUrl, PaitiResultModel.AnswerModelWrapper model);
 
 ```
 
@@ -218,49 +273,44 @@ unRegisterOnReceiveListener(ABCPaiTiAnswerListener listener)
 
 Model | 说明
 ---|---
-AnswerModel | 识别详情 识别答案 问题详情等
-QuestionResult | 图片详情 包含图片地址等
-PASingleModel | 服务端返回的Json 对象 （包含 QuestionResult,AnswerModel）
+AnswrModel | 题目model 
 
-**一般情况 服务端会返回最接近三条识别数据 也就是对应AnswerModel集合**
+**返回data会包含所有搜题结果列表，数组中每个item都是以下类型的model **
 
 
 ```java
 
-class QuestionResult  {
-	 public QuestionModel question;
-	 public ArrayList<AnswerModel> answers;
-}
 
 public class AnswerModel implements Parcelable {
-
-
+	//题目id
    
-    //题目ID
+    @SerializedName("subject")
+    public int subject;
+    @SerializedName("question_id")
     public String question_id;
-    
-    //普通文本
+    @SerializedName("question_body")
     public String question_body;
-    
-    //Html 样式文本
+    @SerializedName("question_body_html")
     public String question_html;
-    
-    // 题目标签
+    @SerializedName("answer_analysis")
+    public String answer_analysis;
+    @SerializedName("question_tag")
     public String question_tag;
-    
-    //答案详情 Html样式
+    @SerializedName("question_answer")
     public String quesiton_answer;
-
-
-   
+    @SerializedName("score")
+ 
+	...
+}
 
 ```
 
-## ResultActivity结果页的HTML渲染
 
 
+### HTML的方式展示。
 
 步骤： 1，页面HTML，拷贝 main/assets 文件夹下www目录到app的对应目录中
+
 
 2，拷贝demo 中的jsplugin目录下所有java文件（MyPlugin，Answer，ClassModel）和 res 的config.xml目录到app的对应文件夹。
 
@@ -268,27 +318,58 @@ public class AnswerModel implements Parcelable {
 
 	//xml file in res
 	<feature name="MyPlugin">
-        	<param name="android-package" value="com.abcpen.simple.jsplugin.MyPlugin" />
-    </feature>
+	    	<param name="android-package" value="com.abcpen.simple.jsplugin.MyPlugin" />
+	</feature>
 
 3，参考ResultActivity ，使用cordovawebview加载页面
 	
 	        loadUrl("file:///android_asset/www/index.html");
-	        
+
 4，参考ResultActivity 实现showquestion等的调用装载数据的逻辑
 
 	 public JSONObject showQuestion() {
-        	if (TextUtils.isEmpty(mImageId) || mContent == null || mContent.size() == 0) {
-       	   	  return showEmptyQuestion();
-       		 }
-       		 return genQuestionObj(2);
- 	   }
- 	   
-5, update h5 css ，统一引用all.css（iOS/Android）
-
-
---------------------------------------------------------------------------------------
+	    	if (TextUtils.isEmpty(mImageId) || mContent == null || mContent.size() == 0) {
+	   	   	  return showEmptyQuestion();
+	   		 }
+	   		 return genQuestionObj(2);
+	   		 }
 
 
 
+**V0.9.0新增修改**
 
+1，修改StartCropfragment.java 初始化选择框的大小
+
+```
+if (cropWidth > 1024)
+    cropWidth = 1024;
+    ...
+if (cropHeight > 1024)
+    cropHeight = 1024;
+```
+
+2，修改highlightView.java
+
+```
+if (rect.width() > 1024)
+    rect.right = rect.left + 1024;
+if (rect.height() > 1024)
+    rect.bottom = rect.top + 1024;
+    ...
+```
+
+3, 修改如果裁剪的图片过大（宽或者高大于1024）直接返回MainActivity onFail()
+
+```
+abcFileCallBack.onFail(path, "image Width Or Height > 1024");
+```
+
+备注：修改地方均用
+
+```
+//v0.9.0 add 
+...
+//#end v0.9.0 add
+```
+
+标志出来，全文搜索即可

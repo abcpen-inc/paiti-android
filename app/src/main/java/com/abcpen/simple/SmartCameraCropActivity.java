@@ -52,7 +52,6 @@ public class SmartCameraCropActivity extends AppCompatActivity implements Camera
         mCameraFragment.setCameraCropListen(this);
     }
 
-
     @Override
     protected void onResume() {
         super.onResume();

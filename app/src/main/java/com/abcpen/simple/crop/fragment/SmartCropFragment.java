@@ -23,14 +23,15 @@ import com.abcpen.simple.crop.old.CropPresenter;
 import com.abcpen.simple.crop.old.HighlightView;
 import com.abcpen.simple.crop.old.ICropView;
 import com.abcpen.simple.util.BitmapRegionLoader;
-import com.abcpen.simple.util.FileCachePathUtil;
 import com.abcpen.simple.util.Util;
 import com.abcpen.simple.view.RotateImageView;
+import com.abcpen.util.FileCachePathUtil;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+
 
 /**
  * SmartCropFragment
@@ -170,7 +171,7 @@ public class SmartCropFragment extends Fragment implements View.OnClickListener,
                     mCropResultBitmap = Bitmap.createBitmap(mThumbBitmap, r.left,
                             r.top, r.width(), r.height());
 
-                   final String cropPath = saveCropResultBitmap(mCropResultBitmap);
+                    final String cropPath = saveCropResultBitmap(mCropResultBitmap);
 
                     if (mCropResultBitmap != mThumbBitmap && mThumbBitmap != null) {
                         mThumbBitmap.recycle();
@@ -181,7 +182,7 @@ public class SmartCropFragment extends Fragment implements View.OnClickListener,
                         public void run() {
                             progressDialog.dismiss();
                             if (mListener != null)
-                                mListener.onCropFinished(mCropResultBitmap,cropPath , mCropMo.originImagePath);
+                                mListener.onCropFinished(mCropResultBitmap, cropPath, mCropMo.originImagePath);
                         }
                     });
 
@@ -251,10 +252,17 @@ public class SmartCropFragment extends Fragment implements View.OnClickListener,
         Rect imageRect = new Rect(0, 0, width, height);
 
         int cropWidth = width * 6 / 7;
-        int cropHeight = height * 2 / 5;
 
+        //v0.9.0 add
+        if (cropWidth > 1024)
+            cropWidth = 1024;
+        int cropHeight = height * 2 / 5;
+        if (cropHeight > 1024)
+            cropHeight = 1024;
         int x = (width - cropWidth) / 2;
         int y = (height - cropHeight) / 2;
+
+        //end v0.9.0 add
 
         RectF cropRect = new RectF(x, y, x + cropWidth, y + cropHeight);
 

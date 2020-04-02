@@ -30,6 +30,16 @@
 -verbose
 -dontwarn
 
--keep class com.abcpen.simple.*{
+-dontwarn com.squareup.okhttp.**
+
+-keep class com.squareup.okhttp.** { *;}
+
+-dontwarn okio.**
+
+-dontwarn org.apache.cordova.**
+-keep class org.apache.cordova.** { *;}
+
+
+-keep class com.abcpen.simple.**{
 public *;
 }

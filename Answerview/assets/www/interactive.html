@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<title>题目详情</title>
+	<meta name="format-detection" content="telephone=no,email=no,adress=no" />
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no"/>
+	<link rel="stylesheet" href="css/detail.css"/>
+	<script type="text/javascript" src="phonegap.js"></script>
+	<script type="text/javascript" src="js/cross/detail.js"></script>
+</head>
+<body class="QA-detail detail-interactive">
+	<div id="test"></div>
+	<div id="PhotoFixed" class="photo-fixed">
+		<div id="Photo" class="photo">
+			<img src="images/photo-load.jpg">
+		</div>
+	</div>
+	<div id="iScroll">
+		<div id="PhotoFrame" class="photo-frame">
+		</div>
+		<div id="content-container" class="content-container solution-loading">
+			<div id="no-solution" class="no-solution">
+				<img class="waitting" id="waitting" src="images/loading.png" lazy-src="images/loading.png"
+				alt="加载中…">
+				<span id="WaitRemind" class="waitting-remind" style="display:none">
+					网络不给力，请稍后重试
+				</span>
+			</div>
+		</div>
+		<div id="SeekHelp" class="seekhelps">
+			<div id="noanswer-remind" class="noanswer">
+				<img src="images/noanswer.png">
+			</div>
+			<span id="help-title" class="help-title">
+				答案不满意
+			</span>
+			<span id="students-help" class="seek-help">
+				求助学霸
+			</span>
+		</div>
+	</div>
+	<img id="data-img" class="data-img">
+	<canvas id="data-canvas" class="data-canvas"></canvas>
+	<script type="text/javascript" src="js/lib/sea.js"></script>
+	<script type="text/javascript" src="js/lib/sea.config.js"></script>
+	<script type="text/javascript" src="js/lib/zepto.js"></script>
+	<script type="text/javascript" src="js/lib/fastclick.js"></script>
+	<script type="text/javascript" src="js/lib/mx.js"></script>
+	<script type="text/javascript" src="js/lib/mx.xxb.js"></script>
+	<script type="text/javascript" src="js/module/Audio.js"></script>
+	<script type="text/javascript" src="js/module/Tab.js"></script>
+	<script type="text/javascript" src="js/module/Tmpl.js"></script>
+	<script type="text/javascript" src="js/page/interactive.js"></script>
+	<script type="text/javascript">
+		$(function() {
+			seajs.use(['page/interactive'], function(page) {
+				page.init();
+			});
+		});
+	</script>
+</body>
+</html>

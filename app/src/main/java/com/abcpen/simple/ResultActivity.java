@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -70,7 +69,6 @@ public class ResultActivity extends DroidGap {
         bindIntent();
         initView();
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
         loadUrl("file:///android_asset/www/index.html");
         activity = this;
     }
@@ -203,8 +201,11 @@ public class ResultActivity extends DroidGap {
      */
     private JSONObject genQuestionObj(int status) {
         ArrayList<Answer> answers = new ArrayList<>();
+
         for (int i = 0; i < mContent.size(); i++) {
+
             Answer answer = convert(mContent.get(i), i);
+
             if (answer != null) {
                 answers.add(answer);
             }
@@ -229,15 +230,16 @@ public class ResultActivity extends DroidGap {
     }
 
     private Answer convert(AnswerModel answerModel, int index) {
+
         Answer answer = new Answer();
         if (answerModel == null)
             return answer;
-        answer.imgUrl = answerModel.image_url;
+        answer.imgUrl = mImageUrl;
         answer.imgUuid = mImageId;
         answer.questionIndex = index;
         answer.questionId = answerModel.question_id;
         answer.questionAnswer = answerModel.quesiton_answer;
-        answer.quesitonAnalysis = answerModel.quesiton_answer;
+        answer.quesitonAnalysis = answerModel.answer_analysis;
         answer.questionBody = answerModel.question_body;
         answer.questionHtml = answerModel.question_html;
         answer.subject = answerModel.subject;
@@ -245,7 +247,7 @@ public class ResultActivity extends DroidGap {
     }
 
     public JSONObject showQuestion() {
-        if (TextUtils.isEmpty(mImageId) || mContent == null || mContent.size() == 0) {
+        if (mContent == null || mContent.size() == 0) {
             return showEmptyQuestion();
         }
         return genQuestionObj(2);

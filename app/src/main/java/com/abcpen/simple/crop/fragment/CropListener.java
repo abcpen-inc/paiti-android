@@ -13,4 +13,5 @@ public interface CropListener {
     void onCropFinished(Bitmap croppedImage, String cropPath, String mImagePath);
 
     void onAgainOpenCamera();
+
 }

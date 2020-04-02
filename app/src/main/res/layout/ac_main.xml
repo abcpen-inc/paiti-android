@@ -5,13 +5,6 @@
               android:gravity="center"
               android:orientation="vertical">
 
-    <Button
-        android:id="@+id/btn_auth"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:onClick="authToSDK"
-        android:text="认证"
-        android:visibility="gone"/>
 
     <Button
         android:id="@+id/btn_open_camera"
@@ -19,6 +12,22 @@
         android:layout_height="wrap_content"
         android:onClick="openCamera"
         android:text="拍照"
+        android:visibility="gone"/>
+
+    <Button
+        android:id="@+id/btn_open_camera2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="openCamera2"
+        android:text="相机2"
+        android:visibility="gone"/>
+
+    <Button
+        android:id="@+id/btn_demo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="demoClick"
+        android:text="搜索示例题目"
         android:visibility="gone"/>
 
 

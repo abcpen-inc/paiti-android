@@ -21,13 +21,11 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.abcpen.camera.sdk.AspectRatio;
+import com.abcpen.answer.ABCPaiTiManager;
 import com.abcpen.camera.sdk.CameraView;
 import com.abcpen.camera.sdk.call.CameraCropListen;
 import com.abcpen.simple.util.Util;
 import com.abcpen.simple.view.RotateImageView;
-
-import java.util.Set;
 
 
 /**
@@ -80,6 +78,13 @@ public class SmartCameraFragment extends Fragment implements View.OnClickListene
                 mCameraView.setPictureSize(point.y, point.x);
             }
 
+
+            @Override
+            public void onFocusChanged(boolean isFocus) {
+                super.onFocusChanged(isFocus);
+                Log.d("zc", "onFocusChanged: " + isFocus);
+            }
+
             @Override
             public void onCameraClosed(CameraView cameraView) {
                 super.onCameraClosed(cameraView);
@@ -101,7 +106,6 @@ public class SmartCameraFragment extends Fragment implements View.OnClickListene
                     progressDialog.dismiss();
                 }
                 Toast.makeText(getActivity(), "拍取图片失败", Toast.LENGTH_SHORT).show();
-                //getActivity().finish();
             }
         });
         mTakeImageView = (RotateImageView) view.findViewById(R.id.iv_take_photo_democf);
@@ -187,7 +191,7 @@ public class SmartCameraFragment extends Fragment implements View.OnClickListene
         mAlbumImageView.setOrientation(-ui_rotation, true);
         mTakeCancel.setOrientation(-ui_rotation, true);
         mGuiderImageView.setOrientation(-ui_rotation, true);
-//        mCameraView.setUIRotation(ui_rotation);
+        //mCameraView.setUIRotation(ui_rotation);
     }
 
 
@@ -209,17 +213,12 @@ public class SmartCameraFragment extends Fragment implements View.OnClickListene
     @Override
     public void onResume() {
         super.onResume();
-//        Log.d("zc", "cameraFragment onResume");
         mCameraView.start();
-        Set<AspectRatio> supportedAspectRatios = mCameraView.getSupportedAspectRatios();
-        Log.i("pq", "supportedAspectRatios" + supportedAspectRatios.size());
-        for (AspectRatio i : supportedAspectRatios) {
-            Log.i("pq", i.toString());
-        }
+
         //AspectRatio aspectRatio =AspectRatio.of(1080,1920);
-        //AspectRatio[] aspectRatios = supportedAspectRatios.toArray(new AspectRatio[supportedAspectRatios.size()]);
-//        mCameraView.setAspectRatio(aspectRatios[3]);
-        orientationEventListener.enable();
+//        AspectRatio[] aspectRatios = supportedAspectRatios.toArray(new AspectRatio[supportedAspectRatios.size()]);
+        /*mCameraView.setAspectRatio(aspectRatios[3]);
+        orientationEventListener.enable();*/
     }
 
 
@@ -265,6 +264,7 @@ public class SmartCameraFragment extends Fragment implements View.OnClickListene
      * 取消拍照
      */
     private void cancelTakePhoto() {
+        ABCPaiTiManager.getInstance().calCanelTakePhoto();
         getActivity().finish();
     }
 
@@ -296,8 +296,8 @@ public class SmartCameraFragment extends Fragment implements View.OnClickListene
         }
         progressDialog.setMessage("图片处理中...");
         progressDialog.show();
-
         mCameraView.takePicture();
+        ABCPaiTiManager.getInstance().calTakePhoto();
     }
 
 

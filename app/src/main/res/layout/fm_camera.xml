@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/fm_camera"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <com.abcpen.camera.ABCCameraView
+        android:id="@+id/abc_camera"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <ImageView
+        android:id="@+id/iv_flash"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_gravity="right"
+        android:layout_margin="10dp"
+        android:src="@drawable/ic_flash_off"/>
+    
+    <ImageView
+        android:id="@+id/iv_album"
+        android:layout_width="60dp"
+        android:layout_margin="10dp"
+        android:src="@drawable/ic_album_nor"
+        android:layout_height="60dp"/>
+
+    <ImageView
+        android:id="@+id/iv_take"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_gravity="center_horizontal|bottom"
+        android:layout_marginBottom="20dp"
+        android:src="@drawable/ic_camera_pressed"/>
+
+</FrameLayout>

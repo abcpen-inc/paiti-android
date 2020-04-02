@@ -569,6 +569,13 @@ public class HighlightView {
             rect.right = this.mImageRect.right;
         if (this.mImageRect.bottom < rect.bottom)
             rect.bottom = this.mImageRect.bottom;
+        //v0.9.0 add
+        if (rect.width() > 1024)
+            rect.right = rect.left + 1024;
+        if (rect.height() > 1024)
+            rect.bottom = rect.top + 1024;
+        //#end v0.9.0 add
+
         this.mCropRect.set(rect);
         this.mDrawRect = computeLayout();
         this.mContext.invalidate();

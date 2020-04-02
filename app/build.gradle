@@ -1,5 +1,4 @@
 apply plugin: 'com.android.application'
-
 android {
     compileSdkVersion 26
     defaultConfig {
@@ -21,21 +20,31 @@ android {
         }
     }
     buildTypes {
-
         debug {
             signingConfig signingConfigs.tSignConfig
             minifyEnabled false
             debuggable true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            manifestPlaceholders = [
+                    //A1QME7MGU99F 属于应用"拍题宝SDK"独有的 Android AppKey, 用于配置SDK
+                    MTA_APPKEY : "A1QME7MGU99F",
+                    //标注应用推广渠道用以区分新用户来源，可填写如应用宝，豌豆荚等
+                    MTA_CHANNEL: "paiti_sdk_debug"
+            ]
         }
 
         release {
             signingConfig signingConfigs.tSignConfig
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            manifestPlaceholders = [
+                    //A1QME7MGU99F 属于应用"拍题宝SDK"独有的 Android AppKey, 用于配置SDK
+                    MTA_APPKEY : "A1QME7MGU99F",
+                    //标注应用推广渠道用以区分新用户来源，可填写如应用宝，豌豆荚等
+                    MTA_CHANNEL: "paiti_sdk_release"
+            ]
         }
     }
-
 
 
 }
@@ -44,15 +53,22 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "com.android.support:appcompat-v7:$supportLibraryVersion"
     testImplementation 'junit:junit:4.12'
-    //相机库
-    implementation 'com.abcpen:open_camera:0.2.9'
-    //识别库
-    implementation 'com.abcpen:recognition:0.2.9'
-
+    //    api project(':Answerview')
     implementation 'com.android.support:multidex:1.0.1'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
     implementation 'com.tbruyelle.rxpermissions2:rxpermissions:0.9.4@aar'
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
     implementation 'com.github.bumptech.glide:glide:3.7.0'
+    implementation 'com.google.code.gson:gson:2.8.0'
+    //easy permission
+    implementation 'pub.devrel:easypermissions:0.4.0'
+
+    implementation 'com.abcpen:open_camera:1.0.1'
+    implementation 'com.abcpen:recognition:1.0.1'
+
+    implementation('com.abcpen:open_camera2:1.0.0', {
+        exclude group: 'com.android.support', module: '*'
+    })
+
 }
